@@ -31,7 +31,6 @@ namespace graph
         public MainWindow()
         {
             InitializeComponent();
-            int i  = 0;
         }
 
 
