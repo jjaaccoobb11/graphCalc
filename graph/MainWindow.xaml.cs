@@ -42,24 +42,12 @@ namespace graph
             trigExpression = false;
 
 
-            Ellipse point = new Ellipse
-            {
-                Width = 2,
-                Height = 2,
-                Fill = Brushes.Red
-            };
+            //DrawOnCanvas(myCanvas);
 
-            // Set Canvas.Left and Canvas.Top to position the point in the middle
-            Canvas.SetLeft(point, (myCanvas.ActualWidth - point.Width) / 2);
-            Canvas.SetTop(point, (myCanvas.ActualHeight - point.Height) / 2);
-
-            // Add the point to the Canvas
-            myCanvas.Children.Add(point);
-
-
-
-            //EvaluateExpression(expression.Text);
         }
+
+
+
 
         static string EvaluateMathExpression(string expressionIn)
         {
@@ -187,6 +175,13 @@ namespace graph
         private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
         {
             expressionInRadians = false;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            GraphWindow window2 = new GraphWindow();
+            window2.Show();
+
         }
     }
 }
