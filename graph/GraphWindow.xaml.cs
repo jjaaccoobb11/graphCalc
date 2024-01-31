@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,15 +22,50 @@ namespace graph
     /// </summary>
     public partial class GraphWindow : Window
     {
+
+        //spannet på x-värdena
+        public double xMin = -5;
+        public double xMax = 5;
+
+        //spannet på y-värdena
+        public double yMin = -5;
+        public double yMax = 5;
+
+        //
+        public double deltaX = 0.01;
+
+
         public GraphWindow()
         {
             InitializeComponent();
-        }
+            //spannet på x-värdena
+            double xMin = -5;
+            double xMax = 5;
 
+            //spannet på y-värdena
+            double yMin = -5;
+            double yMax = 5;
 
+            //
+            double deltaX = 0.01;
 
-        static void DrawOnCanvas(Canvas mycanvas)
+    }
+
+        
+
+        static void DrawOnCanvas(Canvas myCanvas)
         {
+            //spannet på x-värdena
+            double xMin = -5;
+            double xMax = 5;
+
+            //spannet på y-värdena
+            double yMin = -5;
+            double yMax = 5;
+
+            //
+            double deltaX = 0.01;
+
             Ellipse point = new Ellipse
             {
                 Width = 2,
@@ -38,13 +74,15 @@ namespace graph
             };
 
             // set canvas.left and canvas.top to position the point in the middle
-
-            double midpointleft = (mycanvas.ActualWidth - point.Width) / 2;
-            double midpointtop = (mycanvas.ActualHeight - point.Width) / 2;
-
+            double midpointleft = (myCanvas.ActualWidth - point.Width) / 2;
+            double midpointtop = (myCanvas.ActualHeight - point.Width) / 2;
 
 
-            for (int i = 0; i != 100; i++)
+            //Får en lista med olika prickar som ska ritas ut
+            List<double> points = GetPoints(xMin, xMax, deltaX);
+
+
+            for (int i = 0; i <= points.Count - 1; i++)
             {
                 point = new Ellipse
                 {
@@ -53,10 +91,13 @@ namespace graph
                     Fill = Brushes.Red
                 };
 
-                Canvas.SetLeft(point, midpointleft + i);
-                Canvas.SetTop(point, midpointtop + i);
+                //
+                //Canvas.SetLeft(point, midpointleft + (xMin + i));
+                Canvas.SetLeft(point, i);
 
-                mycanvas.Children.Add(point);
+                Canvas.SetTop(point, midpointtop - points[i]);
+
+                myCanvas.Children.Add(point);
             }
         }
 
@@ -78,16 +119,22 @@ namespace graph
 
         }
 
-        static List<double> GetPoints()
+        static List<double> GetPoints(double xMin, double xMax, double deltaX)
         {
+
+
             string expression = "x^2";
+            string newEx = expression.Replace("x", "0.5");
+            string expression1 = expression;
             List<double> points = new List<double>();
 
-            for (double i = 0; i != 5; i += 0.1)
-            {
-                expression = expression.Replace("x^2", $"{i}^2");
 
-                points.Add(double.Parse(EvaluateMathExpression(expression)));
+            for (double i = xMin; i <= xMax; i += deltaX)
+            {
+                string c = i.ToString();
+                c = c.Replace(',', '.');
+
+                points.Add(double.Parse(EvaluateMathExpression(expression.Replace("x", c))));
 
             }
             return points;
@@ -99,7 +146,7 @@ namespace graph
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            GetPoints();
+            GetPoints(-5, 5, 0.01);
             DrawOnCanvas(myCanvas);
         }
     }
