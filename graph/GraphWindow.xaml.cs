@@ -50,10 +50,37 @@ namespace graph
             double deltaX = 0.01;
 
     }
+        static void DrawLines(Canvas myCanvas)
+        {
+            // Horizontal line
+            Line horizontalLine = new Line
+            {
+                X1 = 0,
+                Y1 = 150,
+                X2 = 300,
+                Y2 = 150,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
+            };
 
-        
+            // Vertical line
+            Line verticalLine = new Line
+            {
+                X1 = 150,
+                Y1 = 0,
+                X2 = 150,
+                Y2 = 300,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
+            };
 
-        static void DrawOnCanvas(Canvas myCanvas)
+            // Add lines to the WPF Window (Assuming you have a Canvas named "myCanvas" in your XAML)
+            myCanvas.Children.Add(horizontalLine);
+            myCanvas.Children.Add(verticalLine);
+        }
+
+
+        static void DrawOnCanvas(Canvas myCanvas, string expression)
         {
             //spannet på x-värdena
             double xMin = -5;
@@ -66,6 +93,11 @@ namespace graph
             //
             double deltaX = 0.01;
 
+
+            myCanvas.Children.Clear();
+            DrawLines(myCanvas);
+
+
             Ellipse point = new Ellipse
             {
                 Width = 2,
@@ -73,16 +105,21 @@ namespace graph
                 Fill = Brushes.Red
             };
 
-            // set canvas.left and canvas.top to position the point in the middle
+            //sätter x axlen till mitten
             double midpointleft = (myCanvas.ActualWidth - point.Width) / 2;
+            //sätter y axlen till mitten
             double midpointtop = (myCanvas.ActualHeight - point.Width) / 2;
 
 
             //Får en lista med olika prickar som ska ritas ut
-            List<double> points = GetPoints(xMin, xMax, deltaX);
+            List<double> points = GetPoints(xMin, xMax, deltaX, expression);
+
+            double realDeltaX = myCanvas.ActualWidth / points.Count;
 
 
-            for (int i = 0; i <= points.Count - 1; i++)
+
+            double xValue = 0;
+            for (int i = 0; i <= points.Count - 1; i ++)
             {
                 point = new Ellipse
                 {
@@ -91,20 +128,18 @@ namespace graph
                     Fill = Brushes.Red
                 };
 
-                //
-                //Canvas.SetLeft(point, midpointleft + (xMin + i));
-                Canvas.SetLeft(point, i);
 
+                //x
+                Canvas.SetLeft(point, xValue);
+                //y
                 Canvas.SetTop(point, midpointtop - points[i]);
-
+                xValue += realDeltaX;
                 myCanvas.Children.Add(point);
             }
         }
 
-        static string EvaluateMathExpression(string expressionIn)
+        static string EvaluateMathExpression(org.matheval.Expression expression)
         {
-
-            org.matheval.Expression expression = new org.matheval.Expression(expressionIn);
             try
             {
                 Object value = expression.Eval(); // return 0
@@ -119,35 +154,29 @@ namespace graph
 
         }
 
-        static List<double> GetPoints(double xMin, double xMax, double deltaX)
+        static List<double> GetPoints(double xMin, double xMax, double deltaX, string expressionString)
         {
 
-
-            string expression = "x^2";
-            string newEx = expression.Replace("x", "0.5");
-            string expression1 = expression;
+            org.matheval.Expression expression = new org.matheval.Expression(expressionString);
+            
             List<double> points = new List<double>();
 
-
+            bool negative = true;
             for (double i = xMin; i <= xMax; i += deltaX)
             {
-                string c = i.ToString();
-                c = c.Replace(',', '.');
 
-                points.Add(double.Parse(EvaluateMathExpression(expression.Replace("x", c))));
+                expression.Bind("x", i);
+                points.Add(double.Parse(EvaluateMathExpression(expression)));
 
             }
             return points;
         }
 
 
-
-
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            GetPoints(-5, 5, 0.01);
-            DrawOnCanvas(myCanvas);
+            //GetPoints(-5, 5, 0.01, expression.Text);
+            DrawOnCanvas(myCanvas, expression.Text);
         }
     }
 

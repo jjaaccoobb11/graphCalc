@@ -47,7 +47,21 @@ namespace graph
         }
 
 
+        static string EvaluateMathExpression(org.matheval.Expression expression)
+        {
+            try
+            {
+                Object value = expression.Eval(); // return 0
+                return value.ToString();
+            }
+            catch
+            {
+                ErrorWindow errorWindow = new ErrorWindow();
+                errorWindow.Show();
+                return "";
+            }
 
+        }
 
         static string EvaluateMathExpression(string expressionIn)
         {
