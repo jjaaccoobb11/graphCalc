@@ -91,7 +91,8 @@ namespace graph
             double yMax = 5;
 
             //
-            double deltaX = 0.01;
+            double deltaX = 0.001;
+            
 
 
             myCanvas.Children.Clear();
@@ -115,7 +116,7 @@ namespace graph
             List<double> points = GetPoints(xMin, xMax, deltaX, expression);
 
             double realDeltaX = myCanvas.ActualWidth / points.Count;
-
+            double scaleY = myCanvas.ActualHeight / (yMax * 2);
 
 
             double xValue = 0;
@@ -132,7 +133,9 @@ namespace graph
                 //x
                 Canvas.SetLeft(point, xValue);
                 //y
-                Canvas.SetTop(point, midpointtop - points[i]);
+                double scalingY = midpointtop - (points[i] * scaleY);
+                Canvas.SetTop(point, scalingY);
+                //Canvas.SetTop(point, midpointtop - points[i]);
                 xValue += realDeltaX;
                 myCanvas.Children.Add(point);
             }

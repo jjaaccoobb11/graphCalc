@@ -40,7 +40,9 @@ namespace graph
 
             answer.Text = EvaluateMathExpression(hiddenString).ToString();
             trigExpression = false;
-
+            expression.Text = "";
+            expression.Text = "";
+            hiddenString = "";
 
             //DrawOnCanvas(myCanvas);
 
@@ -176,7 +178,7 @@ namespace graph
 
         private void Button_Click_Clear(object sender, RoutedEventArgs e)
         {
-            
+            answer.Text = "";
             expression.Text = "";
             hiddenString = "";
         }
