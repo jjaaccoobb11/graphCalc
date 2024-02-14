@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D.Converters;
 using System.Windows.Shapes;
 using org.matheval;
 
@@ -24,46 +25,54 @@ namespace graph
     {
 
         //spannet på x-värdena
-        public double xMin = -5;
-        public double xMax = 5;
+        public double xMin {get; set;}
+        public double xMax { get; set; }
 
         //spannet på y-värdena
-        public double yMin = -5;
-        public double yMax = 5;
+        public double yMin { get; set; }
+        public double yMax { get; set; }
 
         //
-        public double deltaX = 0.01;
+        public double deltaX { get; set; }
 
 
         public GraphWindow()
         {
             InitializeComponent();
             //spannet på x-värdena
-            double xMin = -5;
-            double xMax = 5;
+            xMin = -5;
+            xMax = 5;
 
             //spannet på y-värdena
-            double yMin = -5;
-            double yMax = 5;
+            yMin = -5;
+            yMax = 5;
 
-            //
-            double deltaX = 0.01;
+            deltaX = 0.01;
 
     }
-        static void DrawLines(Canvas myCanvas)
+
+        //Ritar ut x-axlen
+        static void DrawXAxis(double yPossition, Canvas myCanvas)
         {
-            // Horizontal line
+
+            // x line
             Line horizontalLine = new Line
             {
                 X1 = 0,
-                Y1 = 150,
+                Y1 = yPossition,
                 X2 = 300,
-                Y2 = 150,
+                Y2 = yPossition,
                 Stroke = Brushes.Black,
                 StrokeThickness = 2
             };
 
-            // Vertical line
+            myCanvas.Children.Add(horizontalLine);
+        }
+
+        //Ritar ut y-axlen
+        static void DrawYAxis(double xPossition, Canvas myCanvas)
+        {
+            // y line
             Line verticalLine = new Line
             {
                 X1 = 150,
@@ -74,27 +83,42 @@ namespace graph
                 StrokeThickness = 2
             };
 
-            // Add lines to the WPF Window (Assuming you have a Canvas named "myCanvas" in your XAML)
-            myCanvas.Children.Add(horizontalLine);
             myCanvas.Children.Add(verticalLine);
         }
 
 
-        static void DrawOnCanvas(Canvas myCanvas, string expression)
+        static void DrawLines(Canvas myCanvas)
         {
-            //spannet på x-värdena
-            double xMin = -5;
-            double xMax = 5;
+            //// x line
+            //Line horizontalLine = new Line
+            //{
+            //    X1 = 0,
+            //    Y1 = 150,
+            //    X2 = 300,
+            //    Y2 = 150,
+            //    Stroke = Brushes.Black,
+            //    StrokeThickness = 2
+            //};
 
-            //spannet på y-värdena
-            double yMin = -5;
-            double yMax = 5;
+            //// y line
+            //Line verticalLine = new Line
+            //{
+            //    X1 = 150,
+            //    Y1 = 0,
+            //    X2 = 150,
+            //    Y2 = 300,
+            //    Stroke = Brushes.Black,
+            //    StrokeThickness = 2
+            //};
 
-            //
-            double deltaX = 0.001;
-            
+            //// Add lines to the WPF Window (Assuming you have a Canvas named "myCanvas" in your XAML)
+            //myCanvas.Children.Add(horizontalLine);
+            //myCanvas.Children.Add(verticalLine);
+        }
 
 
+        public void DrawOnCanvas(Canvas myCanvas, string expression)
+        {
             myCanvas.Children.Clear();
             DrawLines(myCanvas);
 
@@ -129,15 +153,34 @@ namespace graph
                     Fill = Brushes.Red
                 };
 
+                bool shouldBeDrawn = true;
 
                 //x
                 Canvas.SetLeft(point, xValue);
                 //y
                 double scalingY = midpointtop - (points[i] * scaleY);
                 Canvas.SetTop(point, scalingY);
-                //Canvas.SetTop(point, midpointtop - points[i]);
+
+
+
+                if (points[i] > yMax || points[i] < yMin)
+                {
+                    shouldBeDrawn = false;
+                }
+
+                double f = 0;
+                if (xValue == f)
+                {
+                    DrawXAxis(scalingY, myCanvas);
+                }
+                
+
+                if (shouldBeDrawn)
+                {
+                    myCanvas.Children.Add(point);
+                }
+
                 xValue += realDeltaX;
-                myCanvas.Children.Add(point);
             }
         }
 
@@ -164,7 +207,7 @@ namespace graph
             
             List<double> points = new List<double>();
 
-            bool negative = true;
+            //bool negative = true;
             for (double i = xMin; i <= xMax; i += deltaX)
             {
 
@@ -178,7 +221,15 @@ namespace graph
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //GetPoints(-5, 5, 0.01, expression.Text);
+            DrawOnCanvas(myCanvas, expression.Text);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            xMin = int.Parse(xMinIn.Text);
+            xMax = int.Parse(xMaxIn.Text);
+            yMin = int.Parse(yMinIn.Text);
+            yMax = int.Parse(yMaxIn.Text);
             DrawOnCanvas(myCanvas, expression.Text);
         }
     }
