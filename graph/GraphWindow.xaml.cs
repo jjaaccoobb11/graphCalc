@@ -48,72 +48,66 @@ namespace graph
             yMax = 5;
 
             deltaX = 0.01;
+        }
 
-    }
+
+        static double ABS(double doubleIn)
+        {
+            if(doubleIn < 0)
+            {
+                return doubleIn * -1;
+            }
+            else
+            {
+                return doubleIn;
+            }
+        }
 
         //Ritar ut x-axlen
-        static void DrawXAxis(double yPossition, Canvas myCanvas)
+        public void DrawXAxis(Canvas myCanvas)
         {
-
-            // x line
-            Line horizontalLine = new Line
+            if(yMin < 0 && yMax > 0)
             {
-                X1 = 0,
-                Y1 = yPossition,
-                X2 = 300,
-                Y2 = yPossition,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
+                double scale = ABS(yMax) / (ABS(yMax) + ABS(yMin));
 
-            myCanvas.Children.Add(horizontalLine);
+                // x line
+                Line horizontalLine = new Line
+                {
+                    X1 = 0,
+                    Y1 = 300 * scale,
+                    X2 = 300,
+                    Y2 = 300 * scale,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 2
+                };
+                myCanvas.Children.Add(horizontalLine);
+            }
         }
 
         //Ritar ut y-axlen
-        static void DrawYAxis(double xPossition, Canvas myCanvas)
+        public void DrawYAxis(Canvas myCanvas)
         {
-            // y line
-            Line verticalLine = new Line
+            if(xMin < 0 && xMax > 0)
             {
-                X1 = 150,
-                Y1 = 0,
-                X2 = 150,
-                Y2 = 300,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
+                double scale = ABS(xMin) / (ABS(xMax) + ABS(xMin));
 
-            myCanvas.Children.Add(verticalLine);
+                Line verticalLine = new Line
+                {
+                    X1 = 300 * scale,
+                    Y1 = 0,
+                    X2 = 300 * scale,
+                    Y2 = 300,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 2
+                };
+                myCanvas.Children.Add(verticalLine);
+            }
         }
 
-
-        static void DrawLines(Canvas myCanvas)
+        public void DrawLines(Canvas myCanvas)
         {
-            //// x line
-            //Line horizontalLine = new Line
-            //{
-            //    X1 = 0,
-            //    Y1 = 150,
-            //    X2 = 300,
-            //    Y2 = 150,
-            //    Stroke = Brushes.Black,
-            //    StrokeThickness = 2
-            //};
-
-            //// y line
-            //Line verticalLine = new Line
-            //{
-            //    X1 = 150,
-            //    Y1 = 0,
-            //    X2 = 150,
-            //    Y2 = 300,
-            //    Stroke = Brushes.Black,
-            //    StrokeThickness = 2
-            //};
-
-            //// Add lines to the WPF Window (Assuming you have a Canvas named "myCanvas" in your XAML)
-            //myCanvas.Children.Add(horizontalLine);
-            //myCanvas.Children.Add(verticalLine);
+            DrawXAxis(myCanvas);
+            DrawYAxis(myCanvas);
         }
 
 
@@ -121,7 +115,6 @@ namespace graph
         {
             myCanvas.Children.Clear();
             DrawLines(myCanvas);
-
 
             Ellipse point = new Ellipse
             {
@@ -135,13 +128,11 @@ namespace graph
             //sätter y axlen till mitten
             double midpointtop = (myCanvas.ActualHeight - point.Width) / 2;
 
-
             //Får en lista med olika prickar som ska ritas ut
-            List<double> points = GetPoints(xMin, xMax, deltaX, expression);
+            List<double> points = GetPoints(expression);
 
             double realDeltaX = myCanvas.ActualWidth / points.Count;
             double scaleY = myCanvas.ActualHeight / (yMax * 2);
-
 
             double xValue = 0;
             for (int i = 0; i <= points.Count - 1; i ++)
@@ -171,7 +162,7 @@ namespace graph
                 double f = 0;
                 if (xValue == f)
                 {
-                    DrawXAxis(scalingY, myCanvas);
+                    DrawXAxis(myCanvas);
                 }
                 
 
@@ -200,7 +191,7 @@ namespace graph
 
         }
 
-        static List<double> GetPoints(double xMin, double xMax, double deltaX, string expressionString)
+        public List<double> GetPoints(string expressionString)
         {
 
             org.matheval.Expression expression = new org.matheval.Expression(expressionString);
