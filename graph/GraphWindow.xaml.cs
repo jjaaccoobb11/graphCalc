@@ -47,7 +47,7 @@ namespace graph
             yMin = -5;
             yMax = 5;
 
-            deltaX = 0.01;
+            deltaX = 0.001;
         }
 
 
@@ -128,11 +128,22 @@ namespace graph
             //sätter y axlen till mitten
             double midpointtop = (myCanvas.ActualHeight - point.Width) / 2;
 
+            //TEST
+            double scale = ABS(yMax) / (ABS(yMax) + ABS(yMin));
+            double midpointtop1 = 300 * scale;
+
+
+
             //Får en lista med olika prickar som ska ritas ut
             List<double> points = GetPoints(expression);
 
             double realDeltaX = myCanvas.ActualWidth / points.Count;
-            double scaleY = myCanvas.ActualHeight / (yMax * 2);
+
+            double yMax1 = ABS(yMax);
+            double yMin1 = ABS(yMin);
+
+            //double scaleY = myCanvas.ActualHeight / (yMax * 2);
+            double scaleY = myCanvas.ActualHeight / (yMax1 + yMin1);
 
             double xValue = 0;
             for (int i = 0; i <= points.Count - 1; i ++)
@@ -149,7 +160,7 @@ namespace graph
                 //x
                 Canvas.SetLeft(point, xValue);
                 //y
-                double scalingY = midpointtop - (points[i] * scaleY);
+                double scalingY = midpointtop1 - (points[i] * scaleY);
                 Canvas.SetTop(point, scalingY);
 
 

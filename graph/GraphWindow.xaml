@@ -17,12 +17,14 @@
         </Canvas>
         <Button Content="Draw graph" HorizontalAlignment="Left" Height="29" Margin="70,77,0,0" VerticalAlignment="Top" Width="137" Click="Button_Click"/>
         <TextBox x:Name="expression" HorizontalAlignment="Left" Height="27" Margin="70,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
-        
+
         <TextBox x:Name="xMaxIn" HorizontalAlignment="Left" Height="25" Margin="695,34,0,0" TextWrapping="Wrap" Text="2" VerticalAlignment="Top" Width="49"/>
         <TextBox x:Name="yMinIn" HorizontalAlignment="Left" Height="25" Margin="646,59,0,0" TextWrapping="Wrap" Text="-4" VerticalAlignment="Top" Width="49"/>
         <TextBox x:Name="yMaxIn" HorizontalAlignment="Left" Height="25" Margin="695,59,0,0" TextWrapping="Wrap" Text="4" VerticalAlignment="Top" Width="49"/>
         <TextBox x:Name="xMinIn" HorizontalAlignment="Left" Height="25" Margin="646,34,0,0" TextWrapping="Wrap" Text="-2" VerticalAlignment="Top" Width="49"/>
         <Button x:Name="updateButton" Content="Update" HorizontalAlignment="Left" Height="30" Margin="646,92,0,0" VerticalAlignment="Top" Width="98" Click="Button_Click_1"/>
+        <TextBlock HorizontalAlignment="Left" Height="25" Margin="581,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"><Run Language="sv-se" Text="X"/><Run Text=" min/max"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Height="25" Margin="581,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"><Run Language="sv-se" Text="Y"/><Run Text=" min/max"/></TextBlock>
 
     </Grid>
 </Window>
