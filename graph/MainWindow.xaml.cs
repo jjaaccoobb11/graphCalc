@@ -40,25 +40,29 @@ namespace graph
 
             answer.Text = EvaluateMathExpression(hiddenString).ToString();
             trigExpression = false;
+            expression.Text = "";
+            expression.Text = "";
+            hiddenString = "";
+
+            //DrawOnCanvas(myCanvas);
+
+        }
 
 
-            Ellipse point = new Ellipse
+        static string EvaluateMathExpression(org.matheval.Expression expression)
+        {
+            try
             {
-                Width = 2,
-                Height = 2,
-                Fill = Brushes.Red
-            };
+                Object value = expression.Eval(); // return 0
+                return value.ToString();
+            }
+            catch
+            {
+                ErrorWindow errorWindow = new ErrorWindow();
+                errorWindow.Show();
+                return "";
+            }
 
-            // Set Canvas.Left and Canvas.Top to position the point in the middle
-            Canvas.SetLeft(point, (myCanvas.ActualWidth - point.Width) / 2);
-            Canvas.SetTop(point, (myCanvas.ActualHeight - point.Height) / 2);
-
-            // Add the point to the Canvas
-            myCanvas.Children.Add(point);
-
-
-
-            //EvaluateExpression(expression.Text);
         }
 
         static string EvaluateMathExpression(string expressionIn)
@@ -174,7 +178,7 @@ namespace graph
 
         private void Button_Click_Clear(object sender, RoutedEventArgs e)
         {
-            
+            answer.Text = "";
             expression.Text = "";
             hiddenString = "";
         }
@@ -187,6 +191,13 @@ namespace graph
         private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
         {
             expressionInRadians = false;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            GraphWindow window2 = new GraphWindow();
+            window2.Show();
+
         }
     }
 }
