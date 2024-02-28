@@ -27,6 +27,7 @@ namespace graph
 
         static bool expressionInRadians = false;
         static bool trigExpression = false;
+        static int needsEndParenthesis = 0;
 
         public MainWindow()
         {
@@ -98,6 +99,25 @@ namespace graph
                     showContent = "log(";
                     hiddenContent = "LOG10(";
                     break;
+                case "^":
+                    if(needsEndParenthesis != 0)
+                    {
+                        hiddenContent = ")";
+                        needsEndParenthesis--;
+                        while (needsEndParenthesis != 0)
+                        {
+                            hiddenContent += ")";
+                            needsEndParenthesis--;
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                    showContent = "^";
+                    hiddenContent += "^";
+                    
+                    break;
 
                 //-------------------TRIG EXPRESSIONS---------------------------------
                 case "cos":
@@ -153,6 +173,13 @@ namespace graph
                 case "𝛑":
                     showContent = "𝛑";
                     hiddenContent = "PI";
+                    break;
+
+                //(-)
+                case "(-)":
+                    showContent = "-";
+                    hiddenContent = "(-1*";
+                    needsEndParenthesis++;
                     break;
 
                 case ")":
