@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System;
 using org.matheval;
+using System.Diagnostics;
 
 namespace graph
 {
@@ -33,6 +34,15 @@ namespace graph
         {
             InitializeComponent();
         }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = true;
+            p.StartInfo.FileName = "https://jjaaccoobb11.github.io/";
+            p.Start();
+        }
+
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -91,7 +101,20 @@ namespace graph
 
             string hiddenContent = ((Button)sender).Content.ToString();
             string showContent = ((Button)sender).Content.ToString();
-            
+
+            bool pass = false;
+            if (needsEndParenthesis != 0)
+            {
+                hiddenContent += ")";
+                needsEndParenthesis--;
+                while (needsEndParenthesis != 0)
+                {
+                    hiddenContent += ")";
+                    needsEndParenthesis--;
+                }
+                pass = true;
+            }
+
 
             switch (hiddenContent)
             {
@@ -100,22 +123,10 @@ namespace graph
                     hiddenContent = "LOG10(";
                     break;
                 case "^":
-                    if(needsEndParenthesis != 0)
-                    {
-                        hiddenContent = ")";
-                        needsEndParenthesis--;
-                        while (needsEndParenthesis != 0)
-                        {
-                            hiddenContent += ")";
-                            needsEndParenthesis--;
-                        }
-                    }
-                    else
-                    {
 
-                    }
-                    showContent = "^";
                     hiddenContent += "^";
+                    showContent = "^";
+                    
                     
                     break;
 
@@ -183,17 +194,20 @@ namespace graph
                     break;
 
                 case ")":
-
-                    if(trigExpression == true && expressionInRadians == false)
+                    if (!pass)
                     {
-                        hiddenContent = "))";
-                    }
-                    else
-                    {
-                        hiddenContent = ")";
-                    }
+                        if (trigExpression == true && expressionInRadians == false)
+                        {
+                            hiddenContent = "))";
+                        }
+                        else
+                        {
+                            hiddenContent = ")";
+                        }
 
-                    showContent = ")";
+                        showContent = ")";
+                    }
+                    
                     break;
                 
 
