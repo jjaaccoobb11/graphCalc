@@ -7,10 +7,10 @@
         xmlns:local="clr-namespace:graph"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="450" 
+        Height="470" 
         Width="225"
         MinWidth="225"
-        MinHeight="465"
+        MinHeight="470"
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
@@ -24,19 +24,17 @@
         BorderThickness="5"
         CornerRadius="8,8,0,8"/>
 
-        <TextBox x:Name="expression" HorizontalAlignment="Left" Height="21" Margin="30,78,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150" RenderTransformOrigin="0.482,3.772" />
-        <TextBlock x:Name="answer" HorizontalAlignment="Left" Height="22" Margin="32,51,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="148"/>
+        <Button Content="📈" HorizontalAlignment="Left" Height="29" Margin="32,10,0,0" VerticalAlignment="Top" Width="28" Click="Button_Click_1"  Background="#666666" Foreground="#FFFFFF"/>
+        
+        <TextBox x:Name="expression" HorizontalAlignment="Left" Height="21" Margin="30,75,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150" RenderTransformOrigin="0.482,3.772" />
+        <TextBlock x:Name="answer" HorizontalAlignment="Left" Height="22" Margin="32,45,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="148"/>
 
 
 
 
-        <Button Content="📈" HorizontalAlignment="Left" Height="29" Margin="32,10,0,0" VerticalAlignment="Top" Width="28" Click="Button_Click_1"/>
+        
 
-        <TextBlock>           
-    <Hyperlink NavigateUri="http://www.google.com" RequestNavigate="Hyperlink_RequestNavigate">
-        Click here
-    </Hyperlink>
-        </TextBlock>
+        
 
 
 
@@ -79,5 +77,12 @@
 
         <Button Content="ENTER" HorizontalAlignment="Left" Height="30" Margin="30,385,0,0"  VerticalAlignment="Top" Width="70" Click="Button_Click"        Background="#666666" Foreground="#FFFFFF"/>
         <Button Content="CLEAR" HorizontalAlignment="Left" Height="30" Margin="110,385,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click_Clear"  Background="#666666" Foreground="#FFFFFF"/>
+        
+        <TextBlock Margin="190,400,0,0">           
+            <Hyperlink NavigateUri="http://www.google.com" RequestNavigate="Hyperlink_RequestNavigate">?</Hyperlink>
+        </TextBlock>
+
+
+
     </Grid>
 </Window>

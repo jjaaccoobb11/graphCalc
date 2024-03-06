@@ -35,6 +35,9 @@ namespace graph
         //
         public double deltaX { get; set; }
 
+        private double initialWidth;
+        private double initialHeight;
+
 
         public GraphWindow()
         {
@@ -48,8 +51,28 @@ namespace graph
             yMax = 5;
 
             deltaX = 0.001;
+
+            SizeChanged += MainWindow_SizeChanged;
+            initialWidth = Width;
+            initialHeight = Height;
         }
 
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double deltaWidth = Width - initialWidth;
+            double deltaHeight = Height - initialHeight;
+
+            if (Math.Abs(deltaWidth) > Math.Abs(deltaHeight))
+            {
+                // Adjust height to maintain aspect ratio
+                Height = Width * (initialHeight / initialWidth);
+            }
+            else
+            {
+                // Adjust width to maintain aspect ratio
+                Width = Height * (initialWidth / initialHeight);
+            }
+        }
 
         static double ABS(double doubleIn)
         {

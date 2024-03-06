@@ -30,9 +30,32 @@ namespace graph
         static bool trigExpression = false;
         static int needsEndParenthesis = 0;
 
+        private double initialWidth;
+        private double initialHeight;
+
         public MainWindow()
         {
             InitializeComponent();
+            SizeChanged += MainWindow_SizeChanged;
+            initialWidth = Width;
+            initialHeight = Height;
+        }
+
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double deltaWidth = Width - initialWidth;
+            double deltaHeight = Height - initialHeight;
+
+            if (Math.Abs(deltaWidth) > Math.Abs(deltaHeight))
+            {
+                // Adjust height to maintain aspect ratio
+                Height = Width * (initialHeight / initialWidth);
+            }
+            else
+            {
+                // Adjust width to maintain aspect ratio
+                Width = Height * (initialWidth / initialHeight);
+            }
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -124,7 +147,7 @@ namespace graph
                     break;
                 case "^":
 
-                    hiddenContent += "^";
+                    hiddenContent = "^";
                     showContent = "^";
                     
                     
