@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,7 +24,7 @@ namespace graph
     /// </summary>
     public partial class GraphWindow : Window
     {
-
+        private bool isResizing = false;
         //spannet på x-värdena
         public double xMin {get; set;}
         public double xMax { get; set; }
@@ -42,6 +43,16 @@ namespace graph
         public GraphWindow()
         {
             InitializeComponent();
+            this.SizeChanged += GraphWindow_SizeChanged;
+
+            // Subscribe to the PreviewMouseUp event
+            //this.PreviewMouseUp += GraphWindow_PreviewMouseUp;
+            //// Subscribe to the SizeChanged event
+            //this.SizeChanged += GraphWindow_SizeChanged;
+
+
+
+
             //spannet på x-värdena
             xMin = -5;
             xMax = 5;
@@ -86,6 +97,37 @@ namespace graph
             }
         }
 
+        private void GraphWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Mouse.LeftButton != MouseButtonState.Pressed)
+            {
+                DrawOnCanvas(myCanvas, expression.Text);
+            }
+            
+        }
+
+        //private void GraphWindow_SizeChanged(object sender, EventArgs e)
+        //{
+        //    // Set a flag indicating that resizing is in progress
+        //    isResizing = true;
+
+        //}
+
+        //private void GraphWindow_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    // Check if resizing was in progress
+        //    if (isResizing)
+        //    {
+        //        // Call your function here when resizing is completed
+        //        DrawOnCanvas(myCanvas, expression.Text);
+
+        //        // Reset the flag
+        //        isResizing = false;
+        //    }
+        //}
+
+
+
         //Ritar ut x-axlen
         public void DrawXAxis(Canvas myCanvas)
         {
@@ -97,11 +139,11 @@ namespace graph
                 Line horizontalLine = new Line
                 {
                     X1 = 0,
-                    Y1 = 300 * scale,
-                    X2 = 300,
-                    Y2 = 300 * scale,
+                    Y1 = myCanvas.ActualHeight * scale,
+                    X2 = myCanvas.ActualWidth,
+                    Y2 = myCanvas.ActualHeight * scale,
                     Stroke = Brushes.Black,
-                    StrokeThickness = 2
+                    StrokeThickness = 1
                 };
                 myCanvas.Children.Add(horizontalLine);
             }
@@ -116,12 +158,12 @@ namespace graph
 
                 Line verticalLine = new Line
                 {
-                    X1 = 300 * scale,
+                    X1 = myCanvas.ActualHeight * scale,
                     Y1 = 0,
-                    X2 = 300 * scale,
-                    Y2 = 300,
+                    X2 = myCanvas.ActualHeight * scale,
+                    Y2 = myCanvas.ActualHeight,
                     Stroke = Brushes.Black,
-                    StrokeThickness = 2
+                    StrokeThickness = 1
                 };
                 myCanvas.Children.Add(verticalLine);
             }
@@ -141,26 +183,26 @@ namespace graph
 
             Ellipse point = new Ellipse
             {
-                Width = 2,
-                Height = 2,
+                Width = 1,
+                Height = 1,
                 Fill = Brushes.Red
             };
 
-            //sätter x axlen till mitten
-            double midpointleft = (myCanvas.ActualWidth - point.Width) / 2;
-            //sätter y axlen till mitten
-            double midpointtop = (myCanvas.ActualHeight - point.Width) / 2;
+            ////sätter x axlen till mitten
+            //double midpointleft = (myCanvas.ActualWidth) / 2;
+            ////sätter y axlen till mitten
+            //double midpointtop = (myCanvas.ActualHeight) / 2;
 
             //TEST
             double scale = ABS(yMax) / (ABS(yMax) + ABS(yMin));
-            double midpointtop1 = 300 * scale;
+            double midpointtop1 = myCanvas.ActualHeight * scale;
 
 
 
             //Får en lista med olika prickar som ska ritas ut
             List<double> points = GetPoints(expression);
 
-            double realDeltaX = myCanvas.ActualWidth / points.Count;
+            double realDeltaX = myCanvas.ActualHeight / points.Count;
 
             double yMax1 = ABS(yMax);
             double yMin1 = ABS(yMin);
@@ -173,8 +215,8 @@ namespace graph
             {
                 point = new Ellipse
                 {
-                    Width = 2,
-                    Height = 2,
+                    Width = 1,
+                    Height = 1,
                     Fill = Brushes.Red
                 };
 
@@ -184,6 +226,8 @@ namespace graph
                 Canvas.SetLeft(point, xValue);
                 //y
                 double scalingY = midpointtop1 - (points[i] * scaleY);
+
+                
                 Canvas.SetTop(point, scalingY);
 
 
@@ -235,9 +279,14 @@ namespace graph
             //bool negative = true;
             for (double i = xMin; i <= xMax; i += deltaX)
             {
-
-                expression.Bind("x", i);
-                points.Add(double.Parse(EvaluateMathExpression(expression)));
+                try
+                {
+                    expression.Bind("x", i);
+                    points.Add(double.Parse(EvaluateMathExpression(expression)));
+                }
+                catch {
+                    return null;
+                }
 
             }
             return points;

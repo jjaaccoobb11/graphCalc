@@ -16,73 +16,99 @@
         Background="Transparent"
         >
 
-
-
     <Grid>
-        <Border Background="#FFFFFF"
-        BorderBrush="#CCCCCC"
-        BorderThickness="5"
-        CornerRadius="8,8,0,8"/>
 
-        <Button Content="📈" HorizontalAlignment="Left" Height="29" Margin="32,10,0,0" VerticalAlignment="Top" Width="28" Click="Button_Click_1"  Background="#666666" Foreground="#FFFFFF"/>
-        
-        <TextBox x:Name="expression" HorizontalAlignment="Left" Height="21" Margin="30,75,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150" RenderTransformOrigin="0.482,3.772" />
-        <TextBlock x:Name="answer" HorizontalAlignment="Left" Height="22" Margin="32,45,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="148"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
 
+        <Border Grid.RowSpan="13"
+            Grid.ColumnSpan="6"
+            Background="#FFFFFF"
+            BorderBrush="#CCCCCC"
+            BorderThickness="3"
+            CornerRadius="8,8,0,8"/>
 
 
-        
+        <Button Grid.Row="0" Grid.Column="0" Content="📈"  Click="Button_Click_1" Margin="7px" Background="#666666" Foreground="#FFFFFF"/>
 
-        
+        <TextBlock Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">           
+        <Hyperlink NavigateUri="http://www.google.com" RequestNavigate="Hyperlink_RequestNavigate">?</Hyperlink>
+        </TextBlock>
+
+        <!--<TextBlock x:Name="answer" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Center"/>-->
+
+        <Viewbox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="answer" Margin="6px"></TextBlock>
+        </Viewbox>
+
+        <Viewbox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="expression" Margin="6px"></TextBlock>
+        </Viewbox>
 
 
+        <Button Content="cos" Grid.Column="0" Grid.Row="3" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="sin" Grid.Column="1" Grid.Row="3" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="sin" Grid.Column="2" Grid.Row="3" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <RadioButton Content="RAD" Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" Checked="RadioButton_Checked"   Foreground="#000000" Margin="5px"/>
+        <RadioButton Content="DEG" Grid.Column="3" Grid.Row="3" VerticalAlignment="Bottom" Checked="RadioButton_Checked_1" Foreground="#000000" IsChecked="True" Margin="5px"/>
 
 
-        <Button Content="cos" HorizontalAlignment="Left" Height="30" Margin="30,110,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="sin" HorizontalAlignment="Left" Height="30" Margin="70,110,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="tan" HorizontalAlignment="Left" Height="30" Margin="110,110,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <RadioButton Content="RAD" HorizontalAlignment="Left" Margin="150,110,0,0" VerticalAlignment="Top"                  Checked="RadioButton_Checked"   Foreground="#000000"/>
-        <RadioButton Content="DEG" HorizontalAlignment="Left" Margin="150,125,0,0" VerticalAlignment="Top" IsChecked="True" Checked="RadioButton_Checked_1" Foreground="#000000"/>
+        <Button Content="log"  Grid.Column="0" Grid.Row="4" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="𝛑"    Grid.Column="1" Grid.Row="4" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="e"    Grid.Column="2" Grid.Row="4" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="DEL"  Grid.Column="3" Grid.Row="4" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="log"  HorizontalAlignment="Left" Height="30" Margin="30,150,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="𝛑"    HorizontalAlignment="Left" Height="30" Margin="70,150,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="e"    HorizontalAlignment="Left" Height="30" Margin="110,150,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="DEL"  HorizontalAlignment="Left" Height="30" Margin="150,150,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="ln" Grid.Column="0" Grid.Row="5" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="("  Grid.Column="1" Grid.Row="5" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content=")"  Grid.Column="2" Grid.Row="5" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="^"  Grid.Column="3" Grid.Row="5" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="ln" HorizontalAlignment="Left" Height="30" Margin="30,190,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="("  HorizontalAlignment="Left" Height="30" Margin="70,190,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content=")"  HorizontalAlignment="Left" Height="30" Margin="110,190,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="^"  HorizontalAlignment="Left" Height="30" Margin="150,190,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="7" Grid.Column="0" Grid.Row="6" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="8" Grid.Column="1" Grid.Row="6" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="9" Grid.Column="2" Grid.Row="6" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="/" Grid.Column="3" Grid.Row="6" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="7" HorizontalAlignment="Left" Height="30" Margin="30,230,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="8" HorizontalAlignment="Left" Height="30" Margin="70,230,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="9" HorizontalAlignment="Left" Height="30" Margin="110,230,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="/" HorizontalAlignment="Left" Height="30" Margin="150,230,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="4" Grid.Column="0" Grid.Row="7" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="5" Grid.Column="1" Grid.Row="7" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="6" Grid.Column="2" Grid.Row="7" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="*" Grid.Column="3" Grid.Row="7" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="4" HorizontalAlignment="Left" Height="30" Margin="30,270,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="5" HorizontalAlignment="Left" Height="30" Margin="70,270,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="6" HorizontalAlignment="Left" Height="30" Margin="110,270,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="*" HorizontalAlignment="Left" Height="30" Margin="150,270,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="1" Grid.Column="0" Grid.Row="8" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="2" Grid.Column="1" Grid.Row="8" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="3" Grid.Column="2" Grid.Row="8" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="-" Grid.Column="3" Grid.Row="8" Margin="5px" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="1" HorizontalAlignment="Left" Height="30" Margin="30,310,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="2" HorizontalAlignment="Left" Height="30" Margin="70,310,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="3" HorizontalAlignment="Left" Height="30" Margin="110,310,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="-" HorizontalAlignment="Left" Height="30" Margin="150,310,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="+"     Grid.Column="3" Grid.Row="9" Margin="5px"  Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="(-)"   Grid.Column="1" Grid.Row="9" Margin="5px"  Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="."     Grid.Column="2" Grid.Row="9" Margin="5px"  Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="0"     Grid.Column="0" Grid.Row="9" Margin="5px"  Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="+"     HorizontalAlignment="Left" Height="30" Margin="150,350,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="(-)"   HorizontalAlignment="Left" Height="30" Margin="110,350,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="."     HorizontalAlignment="Left" Height="30" Margin="70,350,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
-        <Button Content="0"     HorizontalAlignment="Left" Height="30" Margin="30,350,0,0"  VerticalAlignment="Top" Width="30" Click="Button_Click_Text"  Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="ENTER" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10" Margin="5px" Click="Button_Click"        Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="CLEAR" Grid.Column="2" Grid.ColumnSpan="2"  Grid.Row="10" Margin="5px" Click="Button_Click_Clear"  Background="#666666" Foreground="#FFFFFF"/>
+
 
         <Button Content="ENTER" HorizontalAlignment="Left" Height="30" Margin="30,385,0,0"  VerticalAlignment="Top" Width="70" Click="Button_Click"        Background="#666666" Foreground="#FFFFFF"/>
         <Button Content="CLEAR" HorizontalAlignment="Left" Height="30" Margin="110,385,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click_Clear"  Background="#666666" Foreground="#FFFFFF"/>
-        
-        <TextBlock Margin="190,400,0,0">           
-            <Hyperlink NavigateUri="http://www.google.com" RequestNavigate="Hyperlink_RequestNavigate">?</Hyperlink>
-        </TextBlock>
-
 
 
     </Grid>
+
 </Window>
