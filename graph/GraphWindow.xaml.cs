@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D.Converters;
@@ -43,15 +46,8 @@ namespace graph
         public GraphWindow()
         {
             InitializeComponent();
-            this.SizeChanged += GraphWindow_SizeChanged;
 
-            // Subscribe to the PreviewMouseUp event
-            //this.PreviewMouseUp += GraphWindow_PreviewMouseUp;
-            //// Subscribe to the SizeChanged event
-            //this.SizeChanged += GraphWindow_SizeChanged;
-
-
-
+            this.Loaded += MainWindow_Loaded;
 
             //spannet på x-värdena
             xMin = -5;
@@ -67,6 +63,24 @@ namespace graph
             initialWidth = Width;
             initialHeight = Height;
         }
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            HwndSource src = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
+            src.AddHook(new HwndSourceHook(WndProc));
+        }
+        const int WM_EXITSIZEMOVE = 0x232;
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+
+            if (msg == WM_EXITSIZEMOVE)
+            {
+                Debug.WriteLine("SIZED FINIOSHED");
+                DrawOnCanvas(myCanvas, expression.Text);
+            }
+
+            return IntPtr.Zero;
+        }
+
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -96,38 +110,7 @@ namespace graph
                 return doubleIn;
             }
         }
-
-        private void GraphWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Mouse.LeftButton != MouseButtonState.Pressed)
-            {
-                DrawOnCanvas(myCanvas, expression.Text);
-            }
-            
-        }
-
-        //private void GraphWindow_SizeChanged(object sender, EventArgs e)
-        //{
-        //    // Set a flag indicating that resizing is in progress
-        //    isResizing = true;
-
-        //}
-
-        //private void GraphWindow_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    // Check if resizing was in progress
-        //    if (isResizing)
-        //    {
-        //        // Call your function here when resizing is completed
-        //        DrawOnCanvas(myCanvas, expression.Text);
-
-        //        // Reset the flag
-        //        isResizing = false;
-        //    }
-        //}
-
-
-
+        
         //Ritar ut x-axlen
         public void DrawXAxis(Canvas myCanvas)
         {
@@ -296,6 +279,7 @@ namespace graph
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             DrawOnCanvas(myCanvas, expression.Text);
+            Debug.WriteLine(Mouse.LeftButton.ToString());
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
