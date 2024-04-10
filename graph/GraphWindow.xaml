@@ -40,23 +40,32 @@
                 Grid.ColumnSpan="9"
                 Background="#FFFFFF"
                 BorderBrush="#CCCCCC"
-                BorderThickness="4"
+                
                 CornerRadius="0,0,0,10"/>
 
 
+        <Border 
+                Grid.Row="0"
+                Grid.Column="2"
+                Grid.RowSpan="4"
+                Grid.ColumnSpan="4"
+                Background="White"
+                BorderBrush="#666666"
+                BorderThickness="2"
+                />
         <Canvas x:Name="myCanvas" Grid.Row="0" Grid.RowSpan="4" Grid.Column="2" Grid.ColumnSpan="4">
 
         </Canvas>
 
         <TextBox x:Name="expression" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="x"/>
-        <Button Content="Draw graph" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Click="Button_Click" Margin="10px" Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="Draw graph" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Click="Button_Click_DrawGraph" Margin="10px" Background="#666666" Foreground="#FFFFFF"/>
 
-        <TextBox x:Name="xMaxIn" Grid.Column="6" Grid.Row="5" Text="5" FontSize="24"/>
+        <TextBox x:Name="yMaxIn" Grid.Column="6" Grid.Row="5" Text="5" FontSize="24"/>
         <TextBox x:Name="yMinIn" Grid.Column="5" Grid.Row="5" Text="-5" FontSize="24"/>
-        <TextBox x:Name="yMaxIn" Grid.Column="6" Grid.Row="6" Text="5" FontSize="24"/>
+        <TextBox x:Name="xMaxIn" Grid.Column="6" Grid.Row="6" Text="5" FontSize="24"/>
         <TextBox x:Name="xMinIn" Grid.Column="5" Grid.Row="6" Text="-5" FontSize="24"/>
 
-        <Button x:Name="updateButton" Content="Update" Grid.Row="9" Grid.ColumnSpan="2" Grid.Column="5" Margin="10px" Click="Button_Click_1"  Background="#666666" Foreground="#FFFFFF"/>
+        <Button x:Name="updateButton" Content="Update" Grid.Row="9" Grid.ColumnSpan="2" Grid.Column="5" Margin="10px" Click="Button_Click_Update"  Background="#666666" Foreground="#FFFFFF"/>
 
 
     </Grid>

@@ -27,16 +27,16 @@ namespace graph
     /// </summary>
     public partial class GraphWindow : Window
     {
-        private bool isResizing = false;
-        //spannet på x-värdena
+        //private bool isResizing = false;
+
+        //spannet på x-värdena och y-värdena
         public double xMin {get; set;}
         public double xMax { get; set; }
-
-        //spannet på y-värdena
         public double yMin { get; set; }
         public double yMax { get; set; }
 
-        //
+
+        //Hur många punkter som ska ritas ut på canvasen (exempelvis ger deltaX = 0.1 10 st punkter per x värde, deltaX = 0.01 ger 100st per x värde.)
         public double deltaX { get; set; }
 
         private double initialWidth;
@@ -57,12 +57,15 @@ namespace graph
             yMin = -5;
             yMax = 5;
 
+            //för varje x värde skapas 1000 st punkter
             deltaX = 0.001;
 
             SizeChanged += MainWindow_SizeChanged;
             initialWidth = Width;
             initialHeight = Height;
         }
+
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             HwndSource src = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
@@ -71,17 +74,16 @@ namespace graph
         const int WM_EXITSIZEMOVE = 0x232;
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-
+            //När man har ändrat storleken på fönstret ska grafen ritas ut igen, så den fyller korrekt andel av skärmen
             if (msg == WM_EXITSIZEMOVE)
             {
-                Debug.WriteLine("SIZED FINIOSHED");
                 DrawOnCanvas(myCanvas, expression.Text);
             }
 
             return IntPtr.Zero;
         }
 
-
+        //När man ändrar storlek på fönstret.
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double deltaWidth = Width - initialWidth;
@@ -89,16 +91,17 @@ namespace graph
 
             if (Math.Abs(deltaWidth) > Math.Abs(deltaHeight))
             {
-                // Adjust height to maintain aspect ratio
+                //Anpassar höjden för att bibehålla skalan
                 Height = Width * (initialHeight / initialWidth);
             }
             else
             {
-                // Adjust width to maintain aspect ratio
+                //Anpassar bredden för att bibehålla skalan
                 Width = Height * (initialWidth / initialHeight);
             }
         }
 
+        //Returnerar absolutbeloppet
         static double ABS(double doubleIn)
         {
             if(doubleIn < 0)
@@ -111,20 +114,23 @@ namespace graph
             }
         }
         
-        //Ritar ut x-axlen
+        //Ritar ut x-axlen (den horisontella linjen)
         public void DrawXAxis(Canvas myCanvas)
         {
             if(yMin < 0 && yMax > 0)
             {
                 double scale = ABS(yMax) / (ABS(yMax) + ABS(yMin));
 
-                // x line
+                //x linjen
                 Line horizontalLine = new Line
                 {
+                    //anger start och slut punkt för linjen. Även var mitten av canvasen ska vara.
                     X1 = 0,
                     Y1 = myCanvas.ActualHeight * scale,
                     X2 = myCanvas.ActualWidth,
                     Y2 = myCanvas.ActualHeight * scale,
+
+                    //Färg och storlek på linjen som ritas ut
                     Stroke = Brushes.Black,
                     StrokeThickness = 1
                 };
@@ -132,19 +138,23 @@ namespace graph
             }
         }
 
-        //Ritar ut y-axlen
+        //Ritar ut y-axlen (den vertikala linjen)
         public void DrawYAxis(Canvas myCanvas)
         {
             if(xMin < 0 && xMax > 0)
             {
                 double scale = ABS(xMin) / (ABS(xMax) + ABS(xMin));
 
+                //y linjen
                 Line verticalLine = new Line
                 {
+                    //anger start och slut punkt för linjen. Även var mitten av canvasen ska vara.
                     X1 = myCanvas.ActualHeight * scale,
                     Y1 = 0,
                     X2 = myCanvas.ActualHeight * scale,
                     Y2 = myCanvas.ActualHeight,
+
+                    //Färg och storlek på linjen som ritas ut
                     Stroke = Brushes.Black,
                     StrokeThickness = 1
                 };
@@ -152,15 +162,17 @@ namespace graph
             }
         }
 
+        //Ritar ut både linjerna (x och y/vertikala och horisontella linjerna)
         public void DrawLines(Canvas myCanvas)
         {
             DrawXAxis(myCanvas);
             DrawYAxis(myCanvas);
         }
 
-
+        //Här sker utritningen av punkterna på canvasen
         public void DrawOnCanvas(Canvas myCanvas, string expression)
         {
+            //Ränsar canvasen och ritar ut axlarna
             myCanvas.Children.Clear();
             DrawLines(myCanvas);
 
@@ -171,62 +183,61 @@ namespace graph
                 Fill = Brushes.Red
             };
 
-            ////sätter x axlen till mitten
-            //double midpointleft = (myCanvas.ActualWidth) / 2;
-            ////sätter y axlen till mitten
-            //double midpointtop = (myCanvas.ActualHeight) / 2;
 
-            //TEST
+            //Skalan beroende på y värdena. ymax dividerat med hela y (ymax + ymin) ger vilken % den övre respektive undre halvan ska tas upp av grafen.
             double scale = ABS(yMax) / (ABS(yMax) + ABS(yMin));
             double midpointtop1 = myCanvas.ActualHeight * scale;
 
 
 
-            //Får en lista med olika prickar som ska ritas ut
+            //Får en lista med alla prickar som ska ritas ut
             List<double> points = GetPoints(expression);
 
+            //hur mycket man ska hoppa på x axlen för varje punkt
             double realDeltaX = myCanvas.ActualHeight / points.Count;
 
             double yMax1 = ABS(yMax);
             double yMin1 = ABS(yMin);
 
-            //double scaleY = myCanvas.ActualHeight / (yMax * 2);
             double scaleY = myCanvas.ActualHeight / (yMax1 + yMin1);
 
             double xValue = 0;
+            //För varje punkt som ska ritas ut
             for (int i = 0; i <= points.Count - 1; i ++)
             {
+                //skapar en ny punkt
                 point = new Ellipse
                 {
                     Width = 1,
                     Height = 1,
                     Fill = Brushes.Red
                 };
-
+                //Om punkten ska bli utrtiad eller ej.
                 bool shouldBeDrawn = true;
 
                 //x
                 Canvas.SetLeft(point, xValue);
-                //y
+               
                 double scalingY = midpointtop1 - (points[i] * scaleY);
 
-                
+                //y
                 Canvas.SetTop(point, scalingY);
 
 
-
+                //Om punkten ligger utanför spannet som ska ritas ut ska punkten inte ritas ut
                 if (points[i] > yMax || points[i] < yMin)
                 {
                     shouldBeDrawn = false;
                 }
 
-                double f = 0;
-                if (xValue == f)
-                {
-                    DrawXAxis(myCanvas);
-                }
-                
 
+                //double f = 0;
+                //if (xValue == f)
+                //{
+                //    DrawXAxis(myCanvas);
+                //}
+                
+                //Om punkten ska bli utritad så ritas den ut
                 if (shouldBeDrawn)
                 {
                     myCanvas.Children.Add(point);
@@ -236,6 +247,7 @@ namespace graph
             }
         }
 
+        //samma som i MainWindow.xaml.cs med matheval som gör det till ett uttryck
         static string EvaluateMathExpression(org.matheval.Expression expression)
         {
             try
@@ -252,14 +264,14 @@ namespace graph
 
         }
 
+        //Räknar ut alla punkter som ska ritas ut
         public List<double> GetPoints(string expressionString)
         {
-
             org.matheval.Expression expression = new org.matheval.Expression(expressionString);
-            
+          
             List<double> points = new List<double>();
 
-            //bool negative = true;
+            //genom att ersätta x med i och räkna ut värdet för uttrycket kommer man få lika många punkter som det finns i värden, som beror på deltaX värdet.
             for (double i = xMin; i <= xMax; i += deltaX)
             {
                 try
@@ -275,19 +287,22 @@ namespace graph
             return points;
         }
 
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        //När man trycker på knappen DRAW GRAPH
+        private void Button_Click_DrawGraph(object sender, RoutedEventArgs e)
         {
+            //Ritar ut grafen
             DrawOnCanvas(myCanvas, expression.Text);
-            Debug.WriteLine(Mouse.LeftButton.ToString());
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        //När man vill uppdatera gränsvärdena
+        private void Button_Click_Update(object sender, RoutedEventArgs e)
         {
+            //Ändrar x och y min/max värden
             xMin = int.Parse(xMinIn.Text);
             xMax = int.Parse(xMaxIn.Text);
             yMin = int.Parse(yMinIn.Text);
             yMax = int.Parse(yMaxIn.Text);
+            //ritar ut den nya grafen
             DrawOnCanvas(myCanvas, expression.Text);
         }
     }

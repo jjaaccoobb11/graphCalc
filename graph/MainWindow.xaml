@@ -101,7 +101,7 @@
         <Button Content="."     Grid.Column="2" Grid.Row="9" Margin="5px"  Click="Button_Input_Text"  Background="#666666" Foreground="#FFFFFF"/>
         <Button Content="0"     Grid.Column="0" Grid.Row="9" Margin="5px"  Click="Button_Input_Text"  Background="#666666" Foreground="#FFFFFF"/>
 
-        <Button Content="ENTER" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10" Margin="5px" Click="Button_Click_Enter"        Background="#666666" Foreground="#FFFFFF"/>
+        <Button Content="ENTER" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10" Margin="5px" Click="Button_Click_Enter"   Background="#666666" Foreground="#FFFFFF"/>
         <Button Content="CLEAR" Grid.Column="2" Grid.ColumnSpan="2"  Grid.Row="10" Margin="5px" Click="Button_Click_Clear"  Background="#666666" Foreground="#FFFFFF"/>
 
 

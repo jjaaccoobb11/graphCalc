@@ -46,32 +46,7 @@ namespace graph
             SizeChanged += MainWindow_SizeChanged;
             initialWidth = Width;
             initialHeight = Height;
-
-            this.SizeChanged += GraphWindow_SizeChanged;
-
-            //this.MouseDown += MainWindow_MouseDown;
-
-            this.Loaded += MainWindow_Loaded;
         }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            HwndSource src = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
-            src.AddHook(new HwndSourceHook(WndProc));
-        }
-
-        const int WM_EXITSIZEMOVE = 0x232;
-        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-
-            if (msg == WM_EXITSIZEMOVE)
-            {
-                Debug.WriteLine("SIZED FINIOSHED");
-            }
-
-            return IntPtr.Zero;
-        }
-
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -80,18 +55,18 @@ namespace graph
 
             if (Math.Abs(deltaWidth) > Math.Abs(deltaHeight))
             {
-                // Adjust height to maintain aspect ratio
+                //Ändrar höjden för att behålla skalan
                 Height = Width * (initialHeight / initialWidth);
             }
             else
             {
-                // Adjust width to maintain aspect ratio
+                //Ändrar bredden för att behålla skalan
                 Width = Height * (initialWidth / initialHeight);
             }
         }
 
 
-        //Länken till sidan med manualen
+        //Länken till sidan med "manualen"
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process p = new Process();
@@ -286,12 +261,6 @@ namespace graph
         {
             GraphWindow window2 = new GraphWindow();
             window2.Show();
-
-        }
-
-        private void GraphWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Debug.WriteLine(Mouse.LeftButton.ToString());
 
         }
     }
