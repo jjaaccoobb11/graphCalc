@@ -15,6 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System;
 using org.matheval;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Windows.Interop;
 
 namespace graph
 {
@@ -25,57 +28,79 @@ namespace graph
     {
         static string hiddenString;
 
+        //Svaret på uttrycket man skriver in ska inte vara i radianer vid start (tills man bytar till radianer)
         static bool expressionInRadians = false;
+
+        //Skriver man in ett trigonometriskt uttryck ändras den till true
         static bool trigExpression = false;
+
+        //Antalet slutparanteser som behövs
+        static int needsEndParenthesis = 0;
+
+        private double initialWidth;
+        private double initialHeight;
 
         public MainWindow()
         {
             InitializeComponent();
+            SizeChanged += MainWindow_SizeChanged;
+            initialWidth = Width;
+            initialHeight = Height;
+        }
+
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double deltaWidth = Width - initialWidth;
+            double deltaHeight = Height - initialHeight;
+
+            if (Math.Abs(deltaWidth) > Math.Abs(deltaHeight))
+            {
+                //Ändrar höjden för att behålla skalan
+                Height = Width * (initialHeight / initialWidth);
+            }
+            else
+            {
+                //Ändrar bredden för att behålla skalan
+                Width = Height * (initialWidth / initialHeight);
+            }
         }
 
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        //Länken till sidan med "manualen"
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            //answer.Text = EvaluateMathExpression(expression.Text).ToString();
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = true;
+            p.StartInfo.FileName = "https://jjaaccoobb11.github.io/";
+            p.Start();
+        }
 
-            answer.Text = EvaluateMathExpression(hiddenString).ToString();
+
+        //När man trycker på ENTER knappen
+        private void Button_Click_Enter(object sender, RoutedEventArgs e)
+        {
+            //Med hjälp av Matheval så kan man skicka in långa uttryck och få ut ett svar
+            answer.Text = EvaluateMathExpression().ToString();
+            //Nollställer allt som skall nollställas
             trigExpression = false;
             expression.Text = "";
             expression.Text = "";
             hiddenString = "";
-
-            //DrawOnCanvas(myCanvas);
-
         }
 
-
-        static string EvaluateMathExpression(org.matheval.Expression expression)
+        static string EvaluateMathExpression()
         {
-            try
-            {
-                Object value = expression.Eval(); // return 0
-                return value.ToString();
-            }
-            catch
-            {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Show();
-                return "";
-            }
-
-        }
-
-        static string EvaluateMathExpression(string expressionIn)
-        {
-
+            //Tar och gör en expression av uttrycket
             org.matheval.Expression expression = new org.matheval.Expression(hiddenString);
             try
             {
+                //Försöker få ett svar på uttrycket
                 Object value = expression.Eval(); // return 0
                 return value.ToString();
             }
             catch
             {
+                //Går det inte så kommer ett felfönser upp
                 ErrorWindow errorWindow = new ErrorWindow();
                 errorWindow.Show();
                 return "";
@@ -84,27 +109,53 @@ namespace graph
         }
 
         //----------------------------------------------------------------------------------------INPUT BUTTONS----------------------------------------------------------------
-        private void Button_Click_Text(object sender, RoutedEventArgs e)
+        //Detta händer när man ska skriva in ett uttryck med hjälp av knapparna.
+        private void Button_Input_Text(object sender, RoutedEventArgs e)
         {
-            //expression.Text += ((Button)sender).Content.ToString();
-
+            //Använder mig av 2 olika strängar
+            //Det gömda uttrycket 
             string hiddenContent = ((Button)sender).Content.ToString();
-            string showContent = ((Button)sender).Content.ToString();
-            
 
+            //Det uttrycket som syns på skärmen
+            string showContent = ((Button)sender).Content.ToString();
+
+
+            bool pass = false;
+            //Om det behövs lägga till en slut parantes så görs det här
+            if (needsEndParenthesis != 0)
+            {
+                //Slut parantesen läggs till (bara i gömda strängen
+                hiddenContent += ")";
+                needsEndParenthesis--;
+                while (needsEndParenthesis != 0)
+                {
+                    hiddenContent += ")";
+                    needsEndParenthesis--;
+                }
+                pass = true;
+            }
+
+            //Kollar vilken knapp som var tryckt på
             switch (hiddenContent)
             {
                 case "log":
+                    //Det användaren ser
                     showContent = "log(";
+                    //Det matheval vill ha som input
                     hiddenContent = "LOG10(";
                     break;
+                case "^":
 
-                //-------------------TRIG EXPRESSIONS---------------------------------
+                    hiddenContent = "^";
+                    showContent = "^";
+                    break;
+
+                //-------------------TRIG UTTRYCK---------------------------------
+                //Alla trig uttryck ändrar trigExpressions till true
                 case "cos":
-                    //
                     trigExpression = true;
 
-
+                    //Kollar om svaret ska komma ut i grader eller radianer
                     if (expressionInRadians == false)
                     {
                         hiddenContent = "COS(RADIANS(";
@@ -113,7 +164,6 @@ namespace graph
                     {
                         hiddenContent = "COS(";
                     }
-
                     showContent = "cos(";
                     break;
                 case "sin":
@@ -145,7 +195,7 @@ namespace graph
 
                     showContent = "tan(";
                     break;
-                //----------------------------------------------------------------------------------------------
+                //-----------------------------------SLUT PÅ TRIG------------------------------------------
                 case "ln":
                     showContent = "ln(";
                     hiddenContent = "LN(";
@@ -155,18 +205,28 @@ namespace graph
                     hiddenContent = "PI";
                     break;
 
+                //(-)
+                case "(-)":
+                    showContent = "-";
+                    hiddenContent = "(-1*";
+                    needsEndParenthesis++;
+                    break;
+
                 case ")":
-
-                    if(trigExpression == true && expressionInRadians == false)
+                    if (!pass)
                     {
-                        hiddenContent = "))";
-                    }
-                    else
-                    {
-                        hiddenContent = ")";
-                    }
+                        if (trigExpression == true && expressionInRadians == false)
+                        {
+                            hiddenContent = "))";
+                        }
+                        else
+                        {
+                            hiddenContent = ")";
+                        }
 
-                    showContent = ")";
+                        showContent = ")";
+                    }
+                    
                     break;
                 
 
@@ -176,6 +236,7 @@ namespace graph
             expression.Text += showContent;
         }
 
+        //Ränsar uttrycket
         private void Button_Click_Clear(object sender, RoutedEventArgs e)
         {
             answer.Text = "";
@@ -183,17 +244,20 @@ namespace graph
             hiddenString = "";
         }
 
+        //Om man kryssar i att man vill ha svaret i radianer istället
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             expressionInRadians = true;
         }
 
+        //Om man vill byta från radianer till grader
         private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
         {
             expressionInRadians = false;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        //Öppnar fönstret med grafen
+        private void Button_Open_Graph(object sender, RoutedEventArgs e)
         {
             GraphWindow window2 = new GraphWindow();
             window2.Show();
